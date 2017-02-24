@@ -25,6 +25,10 @@ void wizard(struct players *player);
 void elf(struct players *player);
 void slotnum(int x, int a[]);
 
+void city(struct players *player);
+void hill(struct players *player);
+void attack(struct players *attacker, atruct players *defender);
+
 int main(void){
 	
 	srand(time(NULL));
@@ -43,7 +47,8 @@ int main(void){
 	printf("\nHow many slots would you like: ");
 	scanf("%u", &s);
 	
-	int *a[s];
+	int *a;
+	a = s*(int *) malloc (sizeof(int)); 
 	
 	struct players player[n];
 	struct slots slot[s];
@@ -178,8 +183,39 @@ void slotnum(int x, int *a){
 	}
 	
 }
-	
-	
-	
-	
-	
+
+void city(struct players *player)
+{
+	if(player->smartness > 60)
+	{
+		player->magicskills += 10;
+	}
+	else if(player->smartness <= 50)
+	{
+		player->magicskills -= 10;
+	}
+}
+
+void hill(struct players *player)
+{
+	if(player->dexterity >= 60)
+	{
+		player->strength += 10;
+	}
+	else if(player->dexterity < 50)
+	{
+		player->strength -= 10;
+	}
+}
+
+void attack(struct players *attacker, struct players *attacked)
+{
+	if(attacked->strength<=70)
+	{
+		attacked->lifepoints -= 0.5*attacked->strength;
+	}
+	else
+	{
+		attacker->lifepoints -= 0.3*attacked->strength;
+	}
+}	
