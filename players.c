@@ -6,40 +6,45 @@
 struct players {
 	char name[20];
 	char type[20];
+	char currentSlot[20];
 	int lifepoints;
 	int smartness;
 	int strength;
 	int magicskills;
 	int luck;
 	int dexterity;
+	int slot;
 };
 
 struct slots {
 	char type[20];
 	int numb;
+	int taken;
 };
 
 void human(struct players *player);
 void ogre(struct players *player);
 void wizard(struct players *player);
 void elf(struct players *player);
-void slotnum(int x, int a[]);
+void slotnum(int x, int *a);
 
 void city(struct players *player);
 void hill(struct players *player);
-void attack(struct players *attacker, atruct players *defender);
+void attack(struct players *attacker, struct players *defender);
 
 int main(void){
 	
 	srand(time(NULL));
 	
-	int i, x;
+	int i, x, y;
 	unsigned int n, s;
 	
 	char type1[10] = "uman";
 	char type2[10] = "gre";
 	char type3[10] = "izard";
 	char type4[10] = "lf";
+	char name1[10] = "City";
+	char name2[10] = "Hill";
 	
 	printf("How many players are there: ");
 	scanf("%u", &n);
@@ -47,8 +52,8 @@ int main(void){
 	printf("\nHow many slots would you like: ");
 	scanf("%u", &s);
 	
-	int *a;
-	a = s*(int *) malloc (sizeof(int)); 
+	int *a, b[n];
+	a = malloc(s*sizeof(int));
 	
 	struct players player[n];
 	struct slots slot[s];
@@ -79,7 +84,7 @@ int main(void){
 				exit(1);
 			}
 		}
-		printf("\n-SLOTS-\n");
+		slotnum(s, a);
 		for(i=0; i<s; ++i){
 			x = rand() % 3 + 1;
 			slot[i].numb = x;
@@ -92,9 +97,22 @@ int main(void){
 			else if(x == 3){
 				strcpy(slot[i].type, "City");
 			}
-			slotnum(s, *a);
-			printf("Slot %d - type: %s\n", i+1, slot[i].type);
-			printf("%d", *a[i]);
+			slot[i].numb = a[i];
+			slot[i].taken = 0;
+		}
+		for(i=0; i<n; ++i){
+			player[i].slot = slot[i].numb; 
+		}
+		for(i=0; i<n; ++i){
+			y = player[i].slot;
+			slot[y-1].taken = 1;
+			strcpy(player[i].currentSlot, slot[y-1].type);
+			if(strstr(player[i].currentSlot, name1)!=NULL){
+				city(&player[i]);
+			}
+			else if(strstr(player[i].currentSlot, name2)!=NULL){
+				hill(&player[i]);
+			}
 		}
 		for(i=0; i<n; ++i){
 			printf("\n-PLAYER %d-\n", i+1); 
@@ -106,6 +124,65 @@ int main(void){
 			printf("Magic Skills:\t%d\n", player[i].magicskills);
 			printf("Luck:\t\t%d\n", player[i].luck);
 			printf("Dexterity:\t%d\n", player[i].dexterity);
+			printf("Location:\tSlot %d\n", player[i].slot);
+			printf("Slot Name:\t%s\n", player[i].currentSlot);
+		}
+		printf("\n");
+		for(i=0;i<s;++i){
+			printf("Slot: %d - \ttype: %-12s - \tFree:%d\n", i+1, slot[i].type, slot[i].taken);
+		}
+		// Down to line 192 is statements for asking each player what move they would 
+		// like and stores 1 for forward moves or 0 for backwards in array b[n]
+		
+		for(i=0; i<n; ++i){
+			y = player[i].slot;
+			printf("\nPlayer %d - %s is on a %s slot\n", i+1, player[i].name,  player[i].currentSlot);
+			if((y != 1) && (y != s)) {
+				if(slot[y-2].taken == 0 && slot[y].taken == 0 ){
+					printf("Would you like to move to the next or the previous slot?\n");
+					printf("Press 1 for forward or 0 for backwards\n");
+					scanf("%d", &b[i]);
+				}
+				else if(slot[y-2].taken == 0 && slot[y].taken == 1 ){
+					printf("Would you like to move forwards and attack or backward to the previous slot?\n");
+					printf("Press 1 for forward or 0 for backwards\n");
+					scanf("%d", &b[i]);
+				}
+				else if(slot[y-2].taken == 1 && slot[y].taken == 0 ){
+					printf("Would you like to move forwards to the next slot or backward and attack?\n");
+					printf("Press 1 for forward or 0 for backwards\n");
+					scanf("%d", &b[i]);
+				}
+				else if(slot[y-2].taken == 1 && slot[y].taken == 1 ){
+					printf("Would you like to move forwards and attack or backward and attack?\n");
+					printf("Press 1 for forward or 0 for backwards\n");
+					scanf("%d", &b[i]);
+				}
+			}
+			else if(y == 1) {
+				if(slot[y].taken == 0 ){
+					printf("You are on the first slot, move to the next slot?\n");
+					printf("Press 1 to confirm\n");
+					scanf("%d", &b[i]);
+				}
+				else if(slot[y].taken == 1 ){
+					printf("You are on the first slot, attack player on slot 2?\n");
+					printf("Press 1 to confirm\n");
+					scanf("%d", &b[i]);
+				}
+			}
+			else if(y == s) {
+				if(slot[y-2].taken == 0 ){
+					printf("You are on the last slot, move to the previous slot?\n");
+					printf("Press 0 to confirm\n");
+					scanf("%d", &b[i]);
+				}
+				else if(slot[y-2].taken == 1 ){
+					printf("You are on the last slot, attack player on slot %d?\n", s-1);
+					printf("Press 0 to confirm\n");
+					scanf("%d", &b[i]);
+				}
+			}
 		}
 	}
 	else if(n > 6){
@@ -120,9 +197,7 @@ int main(void){
 		printf("Sorry but there needs to at least one slot per player\n");
 		exit(1);
 	}
-	
-	
-	
+	free(a);
 	return (0);
 	
 }
@@ -176,41 +251,52 @@ void elf(struct players *player){
 	player->magicskills = rand() % 31 + 50;
 }
 void slotnum(int x, int *a){
-	int i, j;
-	for(i=x; i>x-1; --i){
-		j = rand() % (i+1);
-		a[i] = j;
-	}
+	int i, j, swap;
 	
-}
-
-void city(struct players *player)
-{
-	if(player->smartness > 60)
-	{
-		player->magicskills += 10;
+	for(i=0; i<x; ++i){
+		a[i] = i+1;
 	}
-	else if(player->smartness <= 50)
+	for(i=x-1; i>1; --i){
+		j = rand() % i;
+		swap = a[j];
+		a[j] = a[i];
+		a[i] = swap;
+	}
+}
+	
+void city(struct players *player)
+{	// I just added these while loops so as players will never exceed
+	// 100 or go below 0
+	while(player->magicskills < 100 && player->magicskills > 10)
 	{
-		player->magicskills -= 10;
+		if(player->smartness > 60)
+		{
+			player->magicskills += 10;
+		}
+		else if(player->smartness <= 50)
+		{
+			player->magicskills -= 10;
+		}
 	}
 }
 
 void hill(struct players *player)
 {
-	if(player->dexterity >= 60)
-	{
-		player->strength += 10;
-	}
-	else if(player->dexterity < 50)
-	{
-		player->strength -= 10;
+	while(player->strength < 100 && player->strength > 10){
+		if(player->dexterity >= 60)
+		{
+			player->strength += 10;
+		}
+		else if(player->dexterity < 50)
+		{
+			player->strength -= 10;
+		}
 	}
 }
 
 void attack(struct players *attacker, struct players *attacked)
 {
-	if(attacked->strength<=70)
+	if(attacked->strength <= 70)
 	{
 		attacked->lifepoints -= 0.5*attacked->strength;
 	}
@@ -219,3 +305,7 @@ void attack(struct players *attacker, struct players *attacked)
 		attacker->lifepoints -= 0.3*attacked->strength;
 	}
 }	
+
+	
+	
+	
