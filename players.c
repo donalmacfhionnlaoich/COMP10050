@@ -27,9 +27,11 @@ void ogre(struct players *player);
 void wizard(struct players *player);
 void elf(struct players *player);
 void slotnum(int x, int *a);
+void slotname(struct slots *slot, int x);
 
 void city(struct players *player);
 void hill(struct players *player);
+void moveslot(struct players *player, struct slots *slot, int i);
 void attack(struct players *attacker, struct players *defender);
 
 int main(void){
@@ -88,31 +90,14 @@ int main(void){
 		for(i=0; i<s; ++i){
 			x = rand() % 3 + 1;
 			slot[i].numb = x;
-			if(x == 1){
-				strcpy(slot[i].type,"Level Ground");
-			}
-			else if(x == 2){
-				strcpy(slot[i].type, "Hill");
-			}
-			else if(x == 3){
-				strcpy(slot[i].type, "City");
-			}
+			slotname(&slot[i], x);
 			slot[i].numb = a[i];
 			slot[i].taken = 0;
 		}
 		for(i=0; i<n; ++i){
-			player[i].slot = slot[i].numb; 
-		}
-		for(i=0; i<n; ++i){
+			player[i].slot = slot[i].numb;
 			y = player[i].slot;
-			slot[y-1].taken = 1;
-			strcpy(player[i].currentSlot, slot[y-1].type);
-			if(strstr(player[i].currentSlot, name1)!=NULL){
-				city(&player[i]);
-			}
-			else if(strstr(player[i].currentSlot, name2)!=NULL){
-				hill(&player[i]);
-			}
+			moveslot(&player[i], &slot[y-1], i);	
 		}
 		for(i=0; i<n; ++i){
 			printf("\n-PLAYER %d-\n", i+1); 
@@ -145,17 +130,17 @@ int main(void){
 				}
 				else if(slot[y-2].taken == 0 && slot[y].taken == 1 ){
 					printf("Would you like to move forwards and attack or backward to the previous slot?\n");
-					printf("Press 1 for forward or 0 for backwards\n");
+					printf("Press 3 for forward or 0 for backwards\n");
 					scanf("%d", &b[i]);
 				}
 				else if(slot[y-2].taken == 1 && slot[y].taken == 0 ){
 					printf("Would you like to move forwards to the next slot or backward and attack?\n");
-					printf("Press 1 for forward or 0 for backwards\n");
+					printf("Press 1 for forward or 4 for backwards\n");
 					scanf("%d", &b[i]);
 				}
 				else if(slot[y-2].taken == 1 && slot[y].taken == 1 ){
 					printf("Would you like to move forwards and attack or backward and attack?\n");
-					printf("Press 1 for forward or 0 for backwards\n");
+					printf("Press 3 for attack or 4 for backwards\n");
 					scanf("%d", &b[i]);
 				}
 			}
@@ -167,7 +152,7 @@ int main(void){
 				}
 				else if(slot[y].taken == 1 ){
 					printf("You are on the first slot, attack player on slot 2?\n");
-					printf("Press 1 to confirm\n");
+					printf("Press 3 to confirm\n");
 					scanf("%d", &b[i]);
 				}
 			}
@@ -179,10 +164,40 @@ int main(void){
 				}
 				else if(slot[y-2].taken == 1 ){
 					printf("You are on the last slot, attack player on slot %d?\n", s-1);
-					printf("Press 0 to confirm\n");
+					printf("Press 4 to confirm\n");
 					scanf("%d", &b[i]);
 				}
 			}
+		}
+		for(i=0;i<n;++i){
+			y = player[i].slot;
+			if(b[i] == 1){
+				moveslot(&player[i], &slot[y], i);
+				slot[y-1].taken = 0;
+				player[i].slot += 1;
+			}
+			else if(b[i] == 0){
+				moveslot(&player[i], &slot[y-2], i);
+				slot[y-1].taken = 0;
+				player[i].slot -= 1;
+			}
+			else if(b[i] == 3){
+				
+			}
+		}
+		printf("MOVE\n");
+		for(i=0; i<n; ++i){
+			printf("\n-PLAYER %d-\n", i+1); 
+			printf("Name:\t\t%s\n", player[i].name);
+			printf("Type:\t\t%s\n", player[i].type);
+			printf("Life Points:\t%d\n", player[i].lifepoints);
+			printf("Smartness:\t%d\n", player[i].smartness);
+			printf("Strength:\t%d\n", player[i].strength);
+			printf("Magic Skills:\t%d\n", player[i].magicskills);
+			printf("Luck:\t\t%d\n", player[i].luck);
+			printf("Dexterity:\t%d\n", player[i].dexterity);
+			printf("Location:\tSlot %d\n", player[i].slot);
+			printf("Slot Name:\t%s\n", player[i].currentSlot);
 		}
 	}
 	else if(n > 6){
@@ -240,7 +255,7 @@ void wizard(struct players *player){
 	player->luck = rand() % 51 + 50;
 	player->strength = rand() % 21;
 	player->dexterity = rand() % 100 + 1;
-	player->magicskills = rand() % 21 + 80;
+	player->magicskills = (rand() % 21) + 80;
 }
 void elf(struct players *player){
 		
@@ -263,37 +278,89 @@ void slotnum(int x, int *a){
 		a[i] = swap;
 	}
 }
+void slotname(struct slots *slot, int x){
+	if(x == 1){
+		strcpy(slot->type,"Level Ground");
+	}
+	else if(x == 2){
+		strcpy(slot->type, "Hill");
+	}
+	else if(x == 3){
+		strcpy(slot->type, "City");	
+	}
 	
+}	
 void city(struct players *player)
 {	// I just added these while loops so as players will never exceed
 	// 100 or go below 0
-	while(player->magicskills < 100 && player->magicskills > 10)
-	{
-		if(player->smartness > 60)
+	if(player->smartness > 60){
+		if(player->magicskills >= 89)
 		{
+			printf("Test7\n");
+			player->magicskills = 100;
+		}
+		else if(player->magicskills < 89)
+		{
+			printf("Test8\n");
 			player->magicskills += 10;
 		}
-		else if(player->smartness <= 50)
+	}
+	else if(player->smartness <= 50){
+		if(player->magicskills <= 9)
 		{
+			printf("Test9\n");
+			player->magicskills = 0;
+		}
+		else if(player->magicskills < 89)
+		{
+			printf("Test10\n");
 			player->magicskills -= 10;
 		}
 	}
 }
-
 void hill(struct players *player)
 {
-	while(player->strength < 100 && player->strength > 10){
-		if(player->dexterity >= 60)
+	if(player->dexterity >= 60){
+		if(player->strength >= 89)
 		{
+			printf("Test1\n");
+			player->strength = 100;
+		}
+		else if(player->strength < 89)
+		{
+			printf("Test2\n");
 			player->strength += 10;
 		}
-		else if(player->dexterity < 50)
+	}
+	else if(player->dexterity < 50){
+		if(player->strength <= 9)
 		{
+			printf("Test3\n");
+			player->strength = 0;
+		}
+		else if(player->strength < 89)
+		{
+			printf("Test4\n");
 			player->strength -= 10;
 		}
 	}
 }
-
+void moveslot(struct players *player, struct slots *slot, int i){
+	int y;
+	char name1[10] = "City";
+	char name2[10] = "Hill";
+	
+	slot->taken = 1;
+	strcpy(player->currentSlot, slot->type);
+	if(strstr(player->currentSlot, name1)!=NULL){
+		printf("Test city\n");
+		city(&player[i]);
+	}
+	else if(strstr(player->currentSlot, name2)!=NULL){
+		printf("Test hill\n");
+		hill(&player[i]);
+	}
+}
 void attack(struct players *attacker, struct players *attacked)
 {
 	if(attacked->strength <= 70)
@@ -306,6 +373,5 @@ void attack(struct players *attacker, struct players *attacked)
 	}
 }	
 
-	
 	
 	
