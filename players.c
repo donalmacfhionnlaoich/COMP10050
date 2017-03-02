@@ -49,11 +49,23 @@ int main(void){
 	char name1[10] = "City";
 	char name2[10] = "Hill";
 	
+	puts("There can be 1-6 players in the game.");
 	printf("How many players are there: ");
 	scanf("%u", &n);
+	while(n<1 || n>6)
+	{
+		puts("That number of players is invalid. Please enter a valid number of players.");
+		scanf("%u", &n);
+	}
 	
+	puts("There can be 1-20 slots in the game. You must choose at least the same amount of slots as players chosen or greater.");
 	printf("\nHow many slots would you like: ");
 	scanf("%u", &s);
+	while(s<1 || s>20 || s<n)
+	{
+		puts("That number of slots is invalid. Please enter a valid number of slots.");
+		scanf("%u", &s);
+	}
 	
 	int *a, b;
 	a = malloc(s*sizeof(int));
@@ -137,7 +149,7 @@ int main(void){
 					playerAction(y ,b ,player ,slot ,i ,n);
 				}
 				else if(slot[y-2].taken == 0 && slot[y].taken == 1 ){
-					printf("Would you like to move forwards and attack or backward to the previous slot?\n");
+					printf("Would you like to move forwards and attack or move backward to the previous slot?\n");
 					printf("Press 3 for forward attack or 0 for backward move\n");
 					scanf("%d", &b);
 					while(b!=0 && b!=3)
@@ -148,7 +160,7 @@ int main(void){
 					playerAction(y ,b ,player ,slot ,i ,n);
 				}
 				else if(slot[y-2].taken == 1 && slot[y].taken == 0 ){
-					printf("Would you like to move forwards to the next slot or backward and attack?\n");
+					printf("Would you like to move forwards to the next slot or move backward and attack?\n");
 					printf("Press 1 for forward move or 4 for backward attack\n");
 					scanf("%d", &b);
 					while(b!=1 && b!=4)
@@ -159,7 +171,7 @@ int main(void){
 					playerAction(y ,b ,player ,slot ,i ,n);
 				}
 				else if(slot[y-2].taken == 1 && slot[y].taken == 1 ){
-					printf("Would you like to move forwards and attack or backward and attack?\n");
+					printf("Would you like to move forwards and attack or move backward and attack?\n");
 					printf("Press 3 for forward attack or 4 for backward attack\n");
 					scanf("%d", &b);
 					while(b!=3 && b!=4)
@@ -219,40 +231,7 @@ int main(void){
 				}
 			}
 		}
-		/*for(i=0;i<n;++i){
-			y = player[i].slot;
-			if(b[i] == 0){
-				moveslot(&player[i], &slot[y-2], i);
-				slot[y-1].taken = 0;
-				player[i].slot -= 1;
-			}
-			
-			else if(b[i] == 1){
-				moveslot(&player[i], &slot[y], i);
-				slot[y-1].taken = 0;
-				player[i].slot += 1;
-			}
-			else if(b[i] == 3){
-				for(j=0;j<n;++j){
-					x = player[j].slot;
-					if(x == (y + 1)){
-						attack(&player[i], &player[j]);
-					}
-					
-				}
-				
-			}
-			else if(b[i] == 4){
-				for(j=0;j<n;++j){
-					x = player[j].slot;
-					if(x == (y - 1)){
-						attack(&player[i], &player[j]);
-					}
-					
-				}
-				
-			}
-		}*/
+
 		printf("MOVE\n");
 		for(i=0; i<n; ++i){
 			printf("\n-PLAYER %d-\n", i+1); 
@@ -288,12 +267,12 @@ void human(struct players *player){
 	int attrib[5], sum=0, i;
 	
 	do{
+		sum = 0;	//Reset sum to 0.
 		for(i=0; i<5; ++i){
 			attrib[i] = rand() % 100 + 1;
 			sum += attrib[i];
 		}
-	}
-	while(sum >= 300);
+	}while(sum >= 300);
 	
 	player->smartness = attrib[0];
 	player->strength = attrib[1];
@@ -305,6 +284,7 @@ void ogre(struct players *player){
 	int attrib[2], sum=0, i;
 		
 	do{
+		sum = 0;	//Reset sum to 0 if loops through again.
 		attrib[0] = rand() % 21;
 		attrib[1] = rand() % 100 + 1;
 		sum = attrib[1] + attrib[0];
@@ -362,11 +342,11 @@ void city(struct players *player)
 {	// I just added these while loops so as players will never exceed
 	// 100 or go below 0
 	if(player->smartness > 60){
-		if(player->magicskills >= 89)
+		if(player->magicskills >= 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
 		{
 			player->magicskills = 100;
 		}
-		else if(player->magicskills < 89)
+		else if(player->magicskills < 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
 		{
 			player->magicskills += 10;
 		}
