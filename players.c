@@ -24,7 +24,7 @@ struct player_type { //TODO
 	int slot;
 };
 
-struct slots {
+struct slot_type {
 	char type[20];
 	int numb;
 	int taken;
@@ -35,13 +35,13 @@ void ogre(struct player_type *player);
 void wizard(struct player_type *player);
 void elf(struct player_type *player);
 void slotnum(int x, int *a);
-void slotname(struct slots *slot, int x);
+void slotname(struct slot_type *slot, int x);
 
 void city(struct player_type *player);
 void hill(struct player_type *player);
-void moveslot(struct player_type *player, struct slots *slot, int i);
+void moveslot(struct player_type *player, struct slot_type *slot, int i);
 void attack(struct player_type *attacker, struct player_type *attacked);
-void playerAction(int y, int b,struct player_type player[6],struct slots slot[20],int i,int n);
+void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n);
 
 int main(void){
 	
@@ -58,15 +58,15 @@ int main(void){
 	char name2[10] = "Hill";
 	
 	puts("There can be 1-6 player_type in the game.");
-	printf("How many player_type are there: ");
+	printf("How many players are there: ");
 	scanf("%u", &n);
 	while(n<1 || n>6)
 	{
-		puts("That number of player_type is invalid. Please enter a valid number of player_type.");
+		puts("That number of players is invalid. Please enter a valid number of players.");
 		scanf("%u", &n);
 	}
 	
-	puts("There can be 1-20 slots in the game. You must choose at least the same amount of slots as player_type chosen or greater.");
+	puts("There can be 1-20 slots in the game. You must choose at least the same amount of slots as players chosen or greater.");
 	printf("\nHow many slots would you like: ");
 	scanf("%u", &s);
 	while(s<1 || s>20 || s<n)
@@ -75,35 +75,36 @@ int main(void){
 		scanf("%u", &s);
 	}
 	
-	struct player_type *player_type;
-	struct slots *slot_type;
+	struct player_type *player;
+	struct slot_type *slot;
 	int *a, b;
 	a = malloc(s*sizeof(int));
-	player_type = malloc(n*sizeof(player));
+	player = malloc(n*sizeof(struct player_type));
+	slot = malloc(s*sizeof(struct slot_type));
 	
+	puts("memory allocated");
 	
-	
-	puts("\nA player_type name can have a maximum of 19 characters.");
+	puts("\nA players name can have a maximum of 19 characters.");
 	puts("There are 4 types of player_type: Elf, Human, Ogre and Wizard.");	//Giving information to user on the possible types of player_type and name specs.
 	if((n <= 6 && s <= 20) && (n <= s)){
 		for(i=0; i<n; i++){
 			printf("\nEnter Player %d's name: ", i+1);
-			scanf("%19s", player[i]->name);	//Ensuring the maximum of characters of name is at most 19 so that there is one space for the null terminator.
+			scanf("%19s", player[i].name);	//Ensuring the maximum of characters of name is at most 19 so that there is one space for the null terminator.
 			printf("\nEnter Player %d's type: ", i+1);
-			scanf("%s", player[i]->type);
-			player[i]->lifepoints = 100.0;
+			scanf("%s", player[i].type);
+			player[i].lifepoints = 100.0;
 		}
 		for(i=0; i<n; i++){
-			if(strstr(player[i]->type, type1)!=NULL){
+			if(strstr(player[i].type, type1)!=NULL){
 				human(&player[i]);
 			}
-			else if(strstr(player[i]->type, type2)!=NULL){
+			else if(strstr(player[i].type, type2)!=NULL){
 				ogre(&player[i]);
 			}
-			else if(strstr(player[i]->type, type3)!=NULL){
+			else if(strstr(player[i].type, type3)!=NULL){
 				wizard(&player[i]);
 			}
-			else if(strstr(player[i]->type, type4)!=NULL){
+			else if(strstr(player[i].type, type4)!=NULL){
 				elf(&player[i]);
 			}
 			else{
@@ -111,31 +112,37 @@ int main(void){
 				exit(1);
 			}
 		}
+		puts("Types assigned");
 		slotnum(s, a);
+		puts("slotnum ran");
 		for(i=0; i<s; i++){
 			x = rand() % 3 + 1;
-			slot_type.numb = x;
+			puts("x assigned");
+			slot->numb = x;
+			puts("slot numb assigned");
 			slotname(&slot[i], x);
-			slot_type.numb = a[i];
-			slot_type.taken = 0;
+			puts("slotname ran");
+			slot->numb = a[i];
+			slot->taken = 0;
 		}
+		puts("Slots done");
 		for(i=0; i<n; i++){
-			player[i]->slot = slot_type.numb;
-			y = player[i]->slot;
+			player[i].slot = slot->numb;
+			y = player[i].slot;
 			moveslot(&player[i], &slot[y-1], i);	
 		}
 		for(i=0; i<n; i++){
 			printf("\n-PLAYER %d-\n", i+1); 
-			printf("Name:\t\t%s\n", player[i]->name);
-			printf("Type:\t\t%s\n", player[i]->type);
-			printf("Life Points:\t%.1f\n", player[i]->lifepoints);
-			printf("Smartness:\t%d\n", player[i]->smartness);
-			printf("Strength:\t%d\n", player[i]->strength);
-			printf("Magic Skills:\t%d\n", player[i]->magicskills);
-			printf("Luck:\t\t%d\n", player[i]->luck);
-			printf("Dexterity:\t%d\n", player[i]->dexterity);
-			printf("Location:\tSlot %d\n", player[i]->slot);
-			printf("Slot Name:\t%s\n", player[i]->currentSlot);
+			printf("Name:\t\t%s\n", player[i].name);
+			printf("Type:\t\t%s\n", player[i].type);
+			printf("Life Points:\t%.1f\n", player[i].lifepoints);
+			printf("Smartness:\t%d\n", player[i].smartness);
+			printf("Strength:\t%d\n", player[i].strength);
+			printf("Magic Skills:\t%d\n", player[i].magicskills);
+			printf("Luck:\t\t%d\n", player[i].luck);
+			printf("Dexterity:\t%d\n", player[i].dexterity);
+			printf("Location:\tSlot %d\n", player[i].slot);
+			printf("Slot Name:\t%s\n", player[i].currentSlot);
 		}
 		printf("\n");
 		for(i=0;i<s;i++){
@@ -145,8 +152,8 @@ int main(void){
 		// like and stores 1 for forward moves or 0 for backwards in array b[n]
 		
 		for(i=0; i<n; i++){
-			y = player[i]->slot;
-			printf("\nPlayer %d - %s is on a %s slot\n", i+1, player[i]->name,  player[i]->currentSlot);
+			y = player[i].slot;
+			printf("\nPlayer %d - %s is on a %s slot\n", i+1, player[i].name,  player[i].currentSlot);
 			if((y != 1) && (y != s)) {
 				if(slot[y-2].taken == 0 && slot[y].taken == 0 ){
 					printf("Would you like to move to the next or the previous slot?\n");
@@ -246,16 +253,16 @@ int main(void){
 		printf("MOVE");
 		for(i=0; i<n; i++){
 			printf("\n-PLAYER %d-\n", i+1); 
-			printf("Name:\t\t%s\n", player[i]->name);
-			printf("Type:\t\t%s\n", player[i]->type);
-			printf("Life Points:\t%.1f\n", player[i]->lifepoints);
-			printf("Smartness:\t%d\n", player[i]->smartness);
-			printf("Strength:\t%d\n", player[i]->strength);
-			printf("Magic Skills:\t%d\n", player[i]->magicskills);
-			printf("Luck:\t\t%d\n", player[i]->luck);
-			printf("Dexterity:\t%d\n", player[i]->dexterity);
-			printf("Location:\tSlot %d\n", player[i]->slot);
-			printf("Slot Name:\t%s\n", player[i]->currentSlot);
+			printf("Name:\t\t%s\n", player[i].name);
+			printf("Type:\t\t%s\n", player[i].type);
+			printf("Life Points:\t%.1f\n", player[i].lifepoints);
+			printf("Smartness:\t%d\n", player[i].smartness);
+			printf("Strength:\t%d\n", player[i].strength);
+			printf("Magic Skills:\t%d\n", player[i].magicskills);
+			printf("Luck:\t\t%d\n", player[i].luck);
+			printf("Dexterity:\t%d\n", player[i].dexterity);
+			printf("Location:\tSlot %d\n", player[i].slot);
+			printf("Slot Name:\t%s\n", player[i].currentSlot);
 		}
 	}
 	else if(n > 6){
@@ -337,7 +344,7 @@ void slotnum(int x, int *a){
 		a[i] = swap;
 	}
 }
-void slotname(struct slots *slot, int x){
+void slotname(struct slot_type *slot, int x){
 	if(x == 1){
 		strcpy(slot->type,"Level Ground");
 	}
@@ -396,7 +403,7 @@ void hill(struct player_type *player)
 		}
 	}
 }
-void moveslot(struct player_type *player, struct slots *slot, int i){
+void moveslot(struct player_type *player, struct slot_type *slot, int i){
 	int y;
 	char name1[10] = "City";
 	char name2[10] = "Hill";
@@ -424,20 +431,20 @@ void attack(struct player_type *attacker, struct player_type *attacked)
 	}
 }	
 
-void playerAction(int y, int b,struct player_type player[6],struct slots slot[20],int i,int n)
+void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n)
 {
 	int j,x;
 	
 	if(b == 0){
 		moveslot(&player[i], &slot[y-2], i);
 		slot[y-1].taken = 0;
-		player[i]->slot -= 1;
+		player[i].slot -= 1;
 	}
 
 	else if(b == 1){
 		moveslot(&player[i], &slot[y], i);
 		slot[y-1].taken = 0;
-		player[i]->slot += 1;
+		player[i].slot += 1;
 	}
 	else if(b == 3){
 		for(j=0;j<n;j++){
