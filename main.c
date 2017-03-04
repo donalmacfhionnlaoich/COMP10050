@@ -11,53 +11,22 @@
 #include <time.h>
 #include <stdlib.h>
 
-struct player_type { //TODO
-	char name[20];
-	char type[20];
-	char currentSlot[20];
-	float lifepoints;
-	int smartness;
-	int strength;
-	int magicskills;
-	int luck;
-	int dexterity;
-	int slot;
-};
-
-struct slot_type {
-	char type[20];
-	int numb;
-	int taken;
-};
-
-void human(struct player_type *player);
-void ogre(struct player_type *player);
-void wizard(struct player_type *player);
-void elf(struct player_type *player);
-void slotnum(int x, int *a);
-void slotname(struct slot_type *slot, int x);
-
-void city(struct player_type *player);
-void hill(struct player_type *player);
-void moveslot(struct player_type *player, struct slot_type *slot, int i);
-void attack(struct player_type *attacker, struct player_type *attacked);
-void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n);
-void printPlayersStatus(struct player_type player[6], int n);
-
+#include "Functions.h"
+#include "structs.h"
 
 int main(void){
 	
+	setbuf(stdout,NULL);	//Fix error with eclipse on Windows.
+
 	srand(time(NULL));
 	
-	int i, j, x, y;
+	int i, x, y;
 	unsigned int n, s;
 	
 	char type1[10] = "uman";
 	char type2[10] = "gre";
 	char type3[10] = "izard";
 	char type4[10] = "lf";
-	char name1[10] = "City";
-	char name2[10] = "Hill";
 	
 	puts("There can be 1-6 player_type in the game.");
 	printf("How many players are there: ");
@@ -83,9 +52,7 @@ int main(void){
 	a = malloc(s*sizeof(int));
 	player = malloc(n*sizeof(struct player_type));
 	slot = malloc(s*sizeof(struct slot_type));
-	
-	puts("memory allocated");
-	
+
 	puts("\nA players name can have a maximum of 19 characters.");
 	puts("There are 4 types of player_type: Elf, Human, Ogre and Wizard.");	//Giving information to user on the possible types of player_type and name specs.
 	if((n <= 6 && s <= 20) && (n <= s)){
@@ -122,7 +89,6 @@ int main(void){
 			slot[i].numb = a[i];
 			slot[i].taken = 0;
 		}
-		puts("Slots done");
 		for(i=0; i<n; i++){
 			player[i].slot = slot[i].numb;
 			y = player[i].slot;
@@ -238,19 +204,6 @@ int main(void){
 		printf("MOVE");
 		printPlayersStatus(player, n);
 
-		/*for(i=0; i<n; i++){
-			printf("\n-PLAYER %d-\n", i+1); 
-			printf("Name:\t\t%s\n", player[i].name);
-			printf("Type:\t\t%s\n", player[i].type);
-			printf("Life Points:\t%.1f\n", player[i].lifepoints);
-			printf("Smartness:\t%d\n", player[i].smartness);
-			printf("Strength:\t%d\n", player[i].strength);
-			printf("Magic Skills:\t%d\n", player[i].magicskills);
-			printf("Luck:\t\t%d\n", player[i].luck);
-			printf("Dexterity:\t%d\n", player[i].dexterity);
-			printf("Location:\tSlot %d\n", player[i].slot);
-			printf("Slot Name:\t%s\n", player[i].currentSlot);
-		}*/
 	}
 	else if(n > 6){
 		printf("Sorry maximum number of player_type is 6!\n");
@@ -264,209 +217,10 @@ int main(void){
 		printf("Sorry but there needs to at least one slot per player\n");
 		exit(1);
 	}
+
 	free(a);
+	free(player);
+	free(slot);
 	return (0);
 	
-}
-void human(struct player_type *player){
-	int attrib[5], sum=0, i;
-	
-	do{
-		sum = 0;	//Reset sum to 0.
-		for(i=0; i<5; i++){
-			attrib[i] = rand() % 100 + 1;
-			sum += attrib[i];
-		}
-	}while(sum >= 300);
-	
-	player->smartness = attrib[0];
-	player->strength = attrib[1];
-	player->magicskills = attrib[2];
-	player->luck = attrib[3];
-	player->dexterity = attrib[4];
-}
-void ogre(struct player_type *player){
-	int attrib[2], sum=0, i;
-		
-	do{
-		sum = 0;	//Reset sum to 0 if loops through again.
-		attrib[0] = rand() % 21;
-		attrib[1] = rand() % 100 + 1;
-		sum = attrib[1] + attrib[0];
-	}
-	while(sum > 50);
-	
-	player->smartness = attrib[0];
-	player->luck = attrib[1];
-	player->strength = rand() % 21 + 80;	//Max strength possible is 100.
-	player->dexterity = rand() % 21 + 80;	//Max dexterity possible is 100.
-	player->magicskills = 0;
-}
-void wizard(struct player_type *player){
-		
-	player->smartness = rand() % 11 + 90;
-	player->luck = rand() % 51 + 50;
-	player->strength = rand() % 21;
-	player->dexterity = rand() % 100 + 1;
-	player->magicskills = rand() % 21 + 80;
-}
-void elf(struct player_type *player){
-		
-	player->smartness = rand() % 31 + 70;
-	player->luck = rand() % 41 + 60;
-	player->strength = rand() % 51;
-	player->dexterity = rand() % 100 + 1;
-	player->magicskills = rand() % 29 + 51;	//Incremented 50 to 51 and changed rand ()% 31 to 29. (50<magic<80)
-}
-void slotnum(int x, int *a){
-	int i, j, swap;
-	
-	for(i=0; i<x; ++i){
-		a[i] = i+1;
-	}
-	for(i=x-1; i>1; --i){
-		j = rand() % i;
-		swap = a[j];
-		a[j] = a[i];
-		a[i] = swap;
-	}
-}
-void slotname(struct slot_type *slot, int x){
-	if(x == 1){
-		strcpy(slot->type,"Level Ground");
-	}
-	else if(x == 2){
-		strcpy(slot->type, "Hill");
-	}
-	else if(x == 3){
-		strcpy(slot->type, "City");	
-	}
-	
-}	
-void city(struct player_type *player)
-{	// I just added these while loops so as player_type will never exceed
-	// 100 or go below 0
-	if(player->smartness > 60){
-		if(player->magicskills >= 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
-		{
-			player->magicskills = 100;
-		}
-		else if(player->magicskills < 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
-		{
-			player->magicskills += 10;
-		}
-	}
-	else if(player->smartness <= 50){
-		if(player->magicskills <= 9)
-		{
-			player->magicskills = 0;
-		}
-		else if(player->magicskills < 89)
-		{
-			player->magicskills -= 10;
-		}
-	}
-}
-void hill(struct player_type *player)
-{
-	if(player->dexterity >= 60){
-		if(player->strength >= 89)
-		{
-			player->strength = 100;
-		}
-		else if(player->strength < 89)
-		{
-			player->strength += 10;
-		}
-	}
-	else if(player->dexterity < 50){
-		if(player->strength <= 9)
-		{
-			player->strength = 0;
-		}
-		else if(player->strength < 89)
-		{
-			player->strength -= 10;
-		}
-	}
-}
-void moveslot(struct player_type *player, struct slot_type *slot, int i){
-	int y;
-	char name1[10] = "City";
-	char name2[10] = "Hill";
-	
-	slot->taken = 1;
-	strcpy(player->currentSlot, slot->type);
-	if(strstr(player->currentSlot, name1)!=NULL){
-		city(&player[i]);
-	}
-	else if(strstr(player->currentSlot, name2)!=NULL){
-		hill(&player[i]);
-	}
-}
-void attack(struct player_type *attacker, struct player_type *attacked)
-{
-	float x = attacked->strength;
-	
-	if(attacked->strength <= 70)
-	{
-		attacked->lifepoints -= (0.5 * x);
-	}
-	else if(attacked->strength > 70)
-	{
-		attacker->lifepoints -= (0.3 * x);
-	}
-}	
-
-void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n)
-{
-	int j,x;
-	
-	if(b == 0){
-		moveslot(&player[i], &slot[y-2], i);
-		slot[y-1].taken = 0;
-		player[i].slot -= 1;
-	}
-
-	else if(b == 1){
-		moveslot(&player[i], &slot[y], i);
-		slot[y-1].taken = 0;
-		player[i].slot += 1;
-	}
-	else if(b == 3){
-		for(j=0;j<n;j++){
-			x = player[j].slot;
-			if(x == (y + 1)){
-				attack(&player[i], &player[j]);
-			}
-		}
-	}
-	else if(b == 4){
-		for(j=0;j<n;j++){
-			x = player[j].slot;
-			if(x == (y - 1)){
-				attack(&player[i], &player[j]);
-			}
-			
-		}
-		
-	}
-}
-
-void printPlayersStatus(struct player_type player [6], int n)
-{
-	for(int i=0; i<n; ++i)
-	{
-		printf("\n-PLAYER %d-\n", i+1); 
-		printf("Name:\t\t%s\n", player[i].name);
-		printf("Type:\t\t%s\n", player[i].type);
-		printf("Life Points:\t%.1f\n", player[i].lifepoints);
-		printf("Smartness:\t%d\n", player[i].smartness);
-		printf("Strength:\t%d\n", player[i].strength);
-		printf("Magic Skills:\t%d\n", player[i].magicskills);
-		printf("Luck:\t\t%d\n", player[i].luck);
-		printf("Dexterity:\t%d\n", player[i].dexterity);
-		printf("Location:\tSlot %d\n", player[i].slot);
-		printf("Slot Name:\t%s\n", player[i].currentSlot);
-	}
 }
