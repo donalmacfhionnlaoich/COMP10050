@@ -42,6 +42,8 @@ void hill(struct player_type *player);
 void moveslot(struct player_type *player, struct slot_type *slot, int i);
 void attack(struct player_type *attacker, struct player_type *attacked);
 void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n);
+void printPlayersStatus(struct player_type player[6], int n);
+
 
 int main(void){
 	
@@ -112,38 +114,21 @@ int main(void){
 				exit(1);
 			}
 		}
-		puts("Types assigned");
 		slotnum(s, a);
-		puts("slotnum ran");
 		for(i=0; i<s; i++){
 			x = rand() % 3 + 1;
-			puts("x assigned");
-			slot->numb = x;
-			puts("slot numb assigned");
+			slot[i].numb = x;
 			slotname(&slot[i], x);
-			puts("slotname ran");
-			slot->numb = a[i];
-			slot->taken = 0;
+			slot[i].numb = a[i];
+			slot[i].taken = 0;
 		}
 		puts("Slots done");
 		for(i=0; i<n; i++){
-			player[i].slot = slot->numb;
+			player[i].slot = slot[i].numb;
 			y = player[i].slot;
 			moveslot(&player[i], &slot[y-1], i);	
 		}
-		for(i=0; i<n; i++){
-			printf("\n-PLAYER %d-\n", i+1); 
-			printf("Name:\t\t%s\n", player[i].name);
-			printf("Type:\t\t%s\n", player[i].type);
-			printf("Life Points:\t%.1f\n", player[i].lifepoints);
-			printf("Smartness:\t%d\n", player[i].smartness);
-			printf("Strength:\t%d\n", player[i].strength);
-			printf("Magic Skills:\t%d\n", player[i].magicskills);
-			printf("Luck:\t\t%d\n", player[i].luck);
-			printf("Dexterity:\t%d\n", player[i].dexterity);
-			printf("Location:\tSlot %d\n", player[i].slot);
-			printf("Slot Name:\t%s\n", player[i].currentSlot);
-		}
+		printPlayersStatus(player, n);
 		printf("\n");
 		for(i=0;i<s;i++){
 			printf("Slot: %d - \ttype: %-12s - \tTaken:%d\n", i+1, slot[i].type, slot[i].taken); //Replaced free with taken as it was representing the opposite of the values presented.
@@ -251,7 +236,9 @@ int main(void){
 		}
 
 		printf("MOVE");
-		for(i=0; i<n; i++){
+		printPlayersStatus(player, n);
+
+		/*for(i=0; i<n; i++){
 			printf("\n-PLAYER %d-\n", i+1); 
 			printf("Name:\t\t%s\n", player[i].name);
 			printf("Type:\t\t%s\n", player[i].type);
@@ -263,7 +250,7 @@ int main(void){
 			printf("Dexterity:\t%d\n", player[i].dexterity);
 			printf("Location:\tSlot %d\n", player[i].slot);
 			printf("Slot Name:\t%s\n", player[i].currentSlot);
-		}
+		}*/
 	}
 	else if(n > 6){
 		printf("Sorry maximum number of player_type is 6!\n");
@@ -466,6 +453,20 @@ void playerAction(int y, int b,struct player_type player[6],struct slot_type slo
 	}
 }
 
-
-	
-	
+void printPlayersStatus(struct player_type player [6], int n)
+{
+	for(int i=0; i<n; ++i)
+	{
+		printf("\n-PLAYER %d-\n", i+1); 
+		printf("Name:\t\t%s\n", player[i].name);
+		printf("Type:\t\t%s\n", player[i].type);
+		printf("Life Points:\t%.1f\n", player[i].lifepoints);
+		printf("Smartness:\t%d\n", player[i].smartness);
+		printf("Strength:\t%d\n", player[i].strength);
+		printf("Magic Skills:\t%d\n", player[i].magicskills);
+		printf("Luck:\t\t%d\n", player[i].luck);
+		printf("Dexterity:\t%d\n", player[i].dexterity);
+		printf("Location:\tSlot %d\n", player[i].slot);
+		printf("Slot Name:\t%s\n", player[i].currentSlot);
+	}
+}
