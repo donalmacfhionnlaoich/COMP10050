@@ -2,13 +2,13 @@
  * playerAction.c
  *
  *  Created on: 4 Mar 2017
- *      Author: Dónal
+ *      Author: Dï¿½nal
  */
 
 #include "structs.h"
 #include "Functions.h"
 
-void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n)
+void playerAction(int y, int b,struct player_type *player,struct slot_type *slot,int i,int n)
 {
 	int j,x;
 

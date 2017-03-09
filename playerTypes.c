@@ -2,7 +2,7 @@
  * playerTypes.c
  *
  *  Created on: 4 Mar 2017
- *      Author: Dónal
+ *      Author: Dï¿½nal
  */
 
 #include "structs.h"
@@ -31,7 +31,7 @@ void ogre(struct player_type *player){
 	do{
 		sum = 0;	//Reset sum to 0 if loops through again.
 		attrib[0] = rand() % 21;
-		attrib[1] = rand() % 100 + 1;
+		attrib[1] = rand() % 101;	//Changed to 101 from 100+1 so capabilities may be zero
 		sum = attrib[1] + attrib[0];
 	}
 	while(sum > 50);
@@ -44,17 +44,17 @@ void ogre(struct player_type *player){
 }
 void wizard(struct player_type *player){
 
-	player->smartness = rand() % 11 + 90;
-	player->luck = rand() % 51 + 50;
-	player->strength = rand() % 21;
+	player->smartness = rand() % 10 + 91;//Changed to 10 + 91 because all capabilities must be > 0
+	player->luck = rand() % 50 + 51;	//Changed to 50 + 51 because all capabilities must be > 0
+	player->strength = rand() % 20 + 1;	//Changed to 20 + 1 because all capabilities must be > 0
 	player->dexterity = rand() % 100 + 1;
-	player->magicskills = rand() % 21 + 80;
+	player->magicskills = rand() % 20 + 81;//Changed to 20 + 81 because all capabilities must be > 0
 }
 void elf(struct player_type *player){
 
-	player->smartness = rand() % 31 + 70;
-	player->luck = rand() % 41 + 60;
-	player->strength = rand() % 51;
+	player->smartness = rand() % 30 + 71;//Changed to 30 + 71 because all capabilities must be > 0
+	player->luck = rand() % 40 + 61;	//Changed to 40 + 61 because all capabilities must be > 0
+	player->strength = rand() % 50 + 1;	//Changed to 50 + 1 because all capabilities must be > 0
 	player->dexterity = rand() % 100 + 1;
 	player->magicskills = rand() % 29 + 51;	//Incremented 50 to 51 and changed rand ()% 31 to 29. (50<magic<80)
 }

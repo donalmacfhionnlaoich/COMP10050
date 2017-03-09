@@ -14,11 +14,14 @@
 #include "Functions.h"
 #include "structs.h"
 
+#define PLAYER_MAX 6
+#define SLOT_MAX 20
+
 int main(void){
 	
 	setbuf(stdout,NULL);	//Fix error with eclipse on Windows.
 
-	srand(time(NULL));
+	srand(time(NULL));		// Seed rand function with time
 	
 	int i, x, y;
 	unsigned int n, s;
@@ -28,19 +31,19 @@ int main(void){
 	char type3[10] = "izard";
 	char type4[10] = "lf";
 	
-	puts("There can be 1-6 player_type in the game.");
+	printf("There can be 1-%d players in the game.\n", PLAYER_MAX);
 	printf("How many players are there: ");
-	scanf("%u", &n);
-	while(n<1 || n>6)
+	scanf("%u", &n);		// Stores number of players in n
+	while(n<1 || n>PLAYER_MAX)
 	{
 		puts("That number of players is invalid. Please enter a valid number of players.");
 		scanf("%u", &n);
 	}
 	
-	puts("There can be 1-20 slots in the game. You must choose at least the same amount of slots as players chosen or greater.");
+	printf("\nThere can be %d-20 slots in the game.\n", n);
 	printf("\nHow many slots would you like: ");
 	scanf("%u", &s);
-	while(s<1 || s>20 || s<n)
+	while(s<1 || s>SLOT_MAX || s<n)
 	{
 		puts("That number of slots is invalid. Please enter a valid number of slots.");
 		scanf("%u", &s);
@@ -49,13 +52,13 @@ int main(void){
 	struct player_type *player;
 	struct slot_type *slot;
 	int *a, b;
-	a = malloc(s*sizeof(int));
-	player = malloc(n*sizeof(struct player_type));
-	slot = malloc(s*sizeof(struct slot_type));
+	a = calloc(s,sizeof(int));
+	player = calloc(n,sizeof(struct player_type));
+	slot = calloc(s,sizeof(struct slot_type));
 
 	puts("\nA players name can have a maximum of 19 characters.");
-	puts("There are 4 types of player_type: Elf, Human, Ogre and Wizard.");	//Giving information to user on the possible types of player_type and name specs.
-	if((n <= 6 && s <= 20) && (n <= s)){
+	puts("There are 4 types of player: Elf, Human, Ogre and Wizard.");	//Giving information to user on the possible types of player_type and name specs.
+	if((n <= PLAYER_MAX && s <= SLOT_MAX) && (n <= s)){
 		for(i=0; i<n; i++){
 			printf("\nEnter Player %d's name: ", i+1);
 			scanf("%19s", player[i].name);	//Ensuring the maximum of characters of name is at most 19 so that there is one space for the null terminator.
@@ -89,15 +92,19 @@ int main(void){
 			slot[i].numb = a[i];
 			slot[i].taken = 0;
 		}
+		puts("temp\n");
+		printPlayersStatus(player, n); // temp
 		for(i=0; i<n; i++){
 			player[i].slot = slot[i].numb;
+			printf("*-%d - %d\n", player[i].slot, slot[i].numb);
 			y = player[i].slot;
-			moveslot(&player[i], &slot[y-1], i);	
+			moveslot(player, &(slot[y-1]), i);
+//			printf("Attrib %d-*\n", player[i].strength);
 		}
 		printPlayersStatus(player, n);
 		printf("\n");
 		for(i=0;i<s;i++){
-			printf("Slot: %d - \ttype: %-12s - \tTaken:%d\n", i+1, slot[i].type, slot[i].taken); //Replaced free with taken as it was representing the opposite of the values presented.
+			printf("Slot: %d - \ttype: %-12s - \tTaken:%d\tslotnum %d\n", i+1, slot[i].type, slot[i].taken, slot[i].numb); //Replaced free with taken as it was representing the opposite of the values presented.
 		}
 		// Down to line 192 is statements for asking each player what move they would 
 		// like and stores 1 for forward moves or 0 for backwards in array b[n]
@@ -205,11 +212,11 @@ int main(void){
 		printPlayersStatus(player, n);
 
 	}
-	else if(n > 6){
+	else if(n > PLAYER_MAX){
 		printf("Sorry maximum number of player_type is 6!\n");
 		exit(1);
 	}
-	else if(s > 20){
+	else if(s > SLOT_MAX){
 		printf("Sorry maximum number of slots is 20!\n");
 		exit(1);
 	}
@@ -224,3 +231,4 @@ int main(void){
 	return (0);
 	
 }
+
