@@ -5,69 +5,58 @@
  *      Author: D�nal
  */
 
-#include "structs.h"
+#include "structs.h"	//Including definition of structs.
 
+//Function to change a player's attributes if it is on a city slot.
 void city(struct player_type *player)
 {
-	if(player->smartness > 60)
+	if(player->smartness > 60)			//If player's smartness is greater than 60, increase their magic skills by 10 points.
 	{
-		printf("Test1");
-		if(player->magicskills >= 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
+		if(player->magicskills >= 90)		//Max value for magicskills is 100. If player's magicskills is greater than or equal to 90 then set the player's magicskills to 100.
 		{
-			player->magicskills = 100;
-			printf("Test2");
+			player->magicskills = 100;		//Assigning 100 to player's magic skills.
 		}
-		else if(player->magicskills < 90)	//Changed 89 to 90, if magic skills was =89 and we wanted to add ten then it should be 99, not set to 100.
+		else if(player->magicskills < 90)	//If player's magic skills is less than 90, add 10 to their magic skills.
 		{
-			player->magicskills += 10;
-			printf("Test3");
+			player->magicskills += 10;		//Adding 10 to the player's magic skills.
 		}
 	}
-	else if(player->smartness <= 50)
+	else if(player->smartness <= 50)	//If player's smartness is less than or equal to 50, subtract 10 from their dexterity.
 	{
-		printf("Test1a");
-		if(player->magicskills <= 10)
+		if(player->dexterity <= 10)			//Minimum value is 0. If player's dexterity is less than or equal to 10 then set dexterity to 0.
 		{
-			player->magicskills = 0;
-			printf("Test2a");
+			player->dexterity = 0;			//Assigning 0 to player's dexterity.
 		}
-		else if(player->magicskills > 10)
+		else if(player->dexterity > 10)		//If player's dexterity is greater than 10, subtract 10 from the player's dexterity.
 		{
-			player->magicskills -= 10;
-			printf("Test3a");
+			player->dexterity -= 10;		//Subtracting 10 from player's dexterity.
 		}
 	}
 }
 
+//Function to change a player's attributes if it is on a hill slot.
 void hill(struct player_type *player)
 {
-	if(player->dexterity >= 60)
+	if(player->dexterity >= 60)			//If player's dexterity is greater than or equal to 60, add 10 to their strength.
 	{
-		printf("Test1b");
-		if(player->strength >= 90)
+		if(player->strength >= 90)			//Max value for strength is 100. If player's strength is greater than or equal to 90 then set the player's strength to 100.
 		{
-			player->strength = 100;
-			printf("Test2b");
+			player->strength = 100;			//Assigning 100 to player's strength.
 		}
-		else if(player->strength <= 89)
+		else if(player->strength < 90)		//If player's strength is less than 90, add 10 to their strength.
 		{
-			player->strength += 10;
-			printf("Test3b");
+			player->strength += 10;			//Adding 10 to the player's strength.
 		}
 	}
-	else if(player->dexterity < 50)
+	else if(player->dexterity < 50)		//If player's dexterity is less than 50, subtract 10 from their dexterity.
 	{
-		printf("Test1c");
-
-		if(player->strength <= 10)
+		if(player->strength <= 10)		//Minimum value is 0. If player's strength is less than or equal to 10 then set strength to 0.
 		{
-			player->strength = 0;
-			printf("Test2c");
+			player->strength = 0;		//Assigning 0 to player's strength.
 		}
-		else if(player->strength > 10)
+		else if(player->strength > 10)	//If player's strength is greater than 10, subtract 10 from the player's strength.
 		{
-			printf("Test3c");
-			player->strength -= 10;
+			player->strength -= 10;		//Subtracting 10 from player's strength.
 		}
 	}
 }
