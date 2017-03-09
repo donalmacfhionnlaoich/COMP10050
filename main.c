@@ -209,8 +209,12 @@ int main(void){
 		}
 
 		printf("MOVE");
-		printPlayersStatus(player, n);
-
+		//printPlayersStatus(player, n);
+		puts("Name (Type, Lifepoints)\n");
+		for(i=0;i<n;i++)
+		{
+			printf("%-19s (%s, %0.1f)\n",player[i].name,player[i].type,player[i].lifepoints);
+		}
 	}
 	else if(n > PLAYER_MAX){
 		printf("Sorry maximum number of player_type is 6!\n");
