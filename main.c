@@ -108,6 +108,7 @@ int main(void){
 		strcpy(slot[y-1].occupant, player[i].name);
 		moveslot(player, &(slot[y-1]), i);	// Function that assigns player to slot (see slotFunctions.c)
 	}
+
 	printPlayersStatus(player, n);			// Function to print each players details and location (see printPLayerStatus.c)
 	printf("\n");
 	/* Prints slots */
@@ -122,7 +123,7 @@ int main(void){
 		if((y != 1) && (y != s)) {
 			if(slot[y-2].taken == 0 && slot[y].taken == 0 ){
 				printf("Would you like to move to the next or the previous slot\nor attack the nearest player?\n");
-				printf("Press 1 for forward move or 0 for backward move or 7 for nearest player attack\n");
+				printf("Press 1 for forward move or 0 for backward move or 7 for nearest player attack that is more than one slot away.\n");
 				scanf("%d",&b);
 				while(b!=0 && b!=1 && b!=7)
 				{
@@ -134,7 +135,7 @@ int main(void){
 			/* Option for player that has opponent ahead and empty slot behind */
 			else if(slot[y-2].taken == 0 && slot[y].taken == 1 ){
 				printf("Would you like to move forwards and attack or move backward to the previous slot?\n");
-				printf("Press 3 for forward attack or 0 for backward move\n");
+				printf("Press 3 for forward attack player in the next slot or 0 for backward move.\n");
 				scanf("%d", &b);
 				while(b!=0 && b!=3)
 				{
@@ -146,7 +147,7 @@ int main(void){
 			/* Option for player that has opponent behind and empty slot ahead */
 			else if(slot[y-2].taken == 1 && slot[y].taken == 0 ){
 				printf("Would you like to move forwards to the next slot or move backward and attack?\n");
-				printf("Press 1 for forward move or 4 for backward attack\n");
+				printf("Press 1 for forward move or 4 for backward attack player in previous slot.\n");
 				scanf("%d", &b);
 				while(b!=1 && b!=4)
 				{
@@ -158,7 +159,7 @@ int main(void){
 			/* Option for player that has opponents ahead and behind */
 			else if(slot[y-2].taken == 1 && slot[y].taken == 1 ){
 				printf("Would you like to move forwards and attack or move backward and attack?\n");
-				printf("Press 3 for forward attack or 4 for backward attack\n");
+				printf("Press 3 for forward attack or 4 for backward attack, both players are adjacent to your slot.\n");
 				scanf("%d", &b);
 				while(b!=3 && b!=4)
 				{
@@ -173,7 +174,7 @@ int main(void){
 			/* And next slot is free*/
 			if(slot[y].taken == 0 ){
 				printf("Move to the next slot or attack nearest player?\n");
-				printf("Press 1 for forward move or 5 for nearest player attack\n");
+				printf("Press 1 for forward move or 5 for nearest player attack that is more than one slot away.\n");
 				scanf("%d", &b);
 				while(b!=1 && b!=5)
 				{
@@ -200,7 +201,7 @@ int main(void){
 			/* And previous slot is empty */
 			if(slot[y-2].taken == 0 ){
 				printf("This is the last slot, move to the previous slot or attack nearest player?\n");
-				printf("Press 0 for backward move or 6 for nearest player attack\n");
+				printf("Press 0 for backward move or 6 for nearest player attack that is more than one slot away.\n");
 				scanf("%d", &b);
 				while(b!=0 && b!=6)
 				{
