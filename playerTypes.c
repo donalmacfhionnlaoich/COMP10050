@@ -49,18 +49,18 @@ void ogre(struct player_type *player){
 //Function to assign attributes of wizard player type to player.
 void wizard(struct player_type *player){
 
-	player->smartness = rand() % 11 + 90;	//Value 90-100 inclusive assigned to player's smartness.
-	player->luck = rand() % 51 + 50;		//Value 50-100 inclusive assigned to player's luck.
+	player->smartness = rand() % 10 + 91;	//Value 90-100 inclusive assigned to player's smartness.
+	player->luck = rand() % 50 + 51;		//Value 50-100 inclusive assigned to player's luck.
 	player->strength = rand() % 20 + 1;		//Value 1-20 inclusive assigned to player's strength.
 	player->dexterity = rand() % 100 + 1;	//Value 1-100 inclusive assigned to player's dexterity.
-	player->magicskills = rand() % 21 + 80;	//Value 80-100 inclusive assigned to player's magic skills.
+	player->magicskills = rand() % 20 + 81;	//Value 80-100 inclusive assigned to player's magic skills.
 }
 
 //Function to assign attributes of wizard player type to player.
 void elf(struct player_type *player){
 
-	player->smartness = rand() % 31 + 70;	//Value 70-100 inclusive assigned to player's smartness.
-	player->luck = rand() % 41 + 60;		//Value 60-100 inclusive assigned to player's luck.
+	player->smartness = rand() % 30 + 71;	//Value 70-100 inclusive assigned to player's smartness.
+	player->luck = rand() % 40 + 61;		//Value 60-100 inclusive assigned to player's luck.
 	player->strength = rand() % 50 + 1;		//Value 1-50 inclusive assigned to player's strength.
 	player->dexterity = rand() % 100 + 1;	//Value 1-100 inclusive assigned to player's dexterity.
 	player->magicskills = rand() % 29 + 51;	//Value 50-80 non-inclusive assigned to player's magic skills.
