@@ -159,7 +159,7 @@ int main(void){
 			/* Option for player that has opponents ahead and behind */
 			else if(slot[y-2].taken == 1 && slot[y].taken == 1 ){
 				printf("Would you like to move forwards and attack or move backward and attack?\n");
-				printf("Press 3 for forward attack or 4 for backward attack, both players are adjacent to your slot.\n");
+				printf("Press 3 for forward attack in the next slot or 4 for backward attack in previous slot, both players are adjacent to your slot.\n");
 				scanf("%d", &b);
 				while(b!=3 && b!=4)
 				{
