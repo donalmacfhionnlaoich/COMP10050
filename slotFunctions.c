@@ -11,23 +11,23 @@
 #include <stdlib.h>		//Including stdlib for rand function.
 
 void moveslot(struct player_type *player, struct slot_type *slot, int i){
-	char name1[10] = "City";
-	char name2[10] = "Hill";
+	char name1[10] = "City";	// For comparison with players current slot
+	char name2[10] = "Hill";	// For comparison with players current slot
 
-	slot->taken = 1;
-	strcpy(player[i].currentSlot, slot->type);
-	if(strstr(player->currentSlot, name1)!=NULL){
-		city(&player[i]);
+	slot->taken = 1;			// Update slots taken status
+	strcpy(player[i].currentSlot, slot->type);	//Copy slot type to player.currenSlot
+	if(strstr(player[i].currentSlot, name1)!=NULL){		//Returns value if "City" is players slot
+		city(&player[i]);				// Then calls city function (see slotModForPlayer.c)
 	}
-	else if(strstr(player->currentSlot, name2)!=NULL){
-		hill(&player[i]);
+	else if(strstr(player[i].currentSlot, name2)!=NULL){//Returns value if "Hill" is players slot
+		hill(&player[i]);				// Then calls hill function (see slotModForPlayer.c)
 	}
 }
 
-void slotnum(int x, int *a){
+void slotnum(int x, int *a){	// Function shuffle an array of size x (we pass through s - the number of slots - for this value)
 	int i, j, swap;
-
-	for(i=0; i<x; ++i){
+	/* Fisherr Yates Shuffle */
+	for(i=0; i<x; ++i){		
 		a[i] = i+1;
 	}
 	for(i=x-1; i>1; --i){
@@ -38,7 +38,8 @@ void slotnum(int x, int *a){
 	}
 }
 
-void slotname(struct slot_type *slot, int x){
+void slotname(struct slot_type *slot, int x){	// This function names the slot 
+											//as per randomly assigned number in main
 	if(x == 1){
 		strcpy(slot->type,"Level Ground");
 	}
