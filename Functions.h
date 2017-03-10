@@ -10,7 +10,7 @@
 
 #include "structs.h"
 
-void printPlayersStatus(struct player_type player[6], int n);
+void printPlayersStatus(struct player_type *player, int n);
 
 /* -----SLOT ASSIGN FUNCTIONS------ */
 void moveslot(struct player_type *player, struct slot_type *slot, int i);
@@ -21,7 +21,7 @@ void slotname(struct slot_type *slot, int x);
 void city(struct player_type *player);
 void hill(struct player_type *player);
 void attack(struct player_type *attacker, struct player_type *attacked);
-void playerAction(int y, int b,struct player_type player[6],struct slot_type slot[20],int i,int n,int s);
+void playerAction(int y, int b,struct player_type *player,struct slot_type *slot,int i,int n,int s);
 
 /* PLAYER TYPES SLOTS */
 void human(struct player_type *player);

@@ -9,7 +9,7 @@
 #include <stdio.h>		//Including stdio library for printf function.
 
 //Function to print out all details of every player.
-void printPlayersStatus(struct player_type player [6], int n)
+void printPlayersStatus(struct player_type *player, int n)
 {
 	for(int i=0; i<n; ++i)	//For loop to index through each player up to the final player.
 	{
