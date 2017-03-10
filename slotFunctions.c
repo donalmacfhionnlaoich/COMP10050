@@ -16,10 +16,10 @@ void moveslot(struct player_type *player, struct slot_type *slot, int i){
 
 	slot->taken = 1;			// Update slots taken status
 	strcpy(player[i].currentSlot, slot->type);	//Copy slot type to player.currenSlot
-	if(strstr(player[i].currentSlot, name1)!=NULL){		//Returns value if "City" is players slot
+	if(strcmp(player[i].currentSlot, name1)!=0){		//Returns value if "City" is players slot
 		city(&player[i]);				// Then calls city function (see slotModForPlayer.c)
 	}
-	else if(strstr(player[i].currentSlot, name2)!=NULL){//Returns value if "Hill" is players slot
+	else if(strcmp(player[i].currentSlot, name2)!=0){//Returns value if "Hill" is players slot
 		hill(&player[i]);				// Then calls hill function (see slotModForPlayer.c)
 	}
 }
