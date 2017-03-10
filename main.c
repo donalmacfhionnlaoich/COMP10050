@@ -58,13 +58,13 @@ int main(void){
 	slot = calloc(s,sizeof(struct slot_type));
 
 	/* ---User input of player name and type--- */
-	puts("\nA players name can have a maximum of 19 characters.");
+	puts("\nA players name can have a maximum length of 19 characters.");
 	puts("There are 4 types of player: Elf, Human, Ogre and Wizard.");	//Giving information to user on the possible types of player_type and name specs.
 	if((n <= PLAYER_MAX && s <= SLOT_MAX) && (n <= s)){
 		for(i=0; i<n; i++){
 			printf("\nEnter Player %d's name: ", i+1);
 			scanf("%19s", player[i].name);	//Ensuring the maximum of characters of name is at most 19 so that there is one space for the null terminator.
-			printf("\nEnter Player %d's type\n", i+1);
+			printf("\n----------Enter Player %d's type---------\n", i+1);
 			printf("1 - Elf, 2 - Human, 3 - Ogre, 4 - Wizard:\n");
 			scanf("%d", &typeNum);		// User input for player type
 			while(typeNum < 1 || typeNum > 4){	// Loops while entered digit is not 1-4
